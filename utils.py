@@ -5,9 +5,20 @@ def sigmoid(x):
     """The sigmoid function as described in 10:26 of https://youtu.be/aircAruvnKk?t=626"""
     return 1/(1+math.exp(-x))
 
-def matrixMultiply(matrix1, matrix2):
-    """matrix multiplication as in linear algebra"""
-    pass
+def matrixMultiply(A, B):
+    """matrix multiplication as in linear algebra as in https://www.mathsisfun.com/algebra/matrix-multiplying.html"""
+    result = []
+    for i in range(len(A)):
+        result.append([0]*len(B[0]))
+    # iterating by row of A
+    for i in range(len(A)):
+        # iterating by column by B
+        for j in range(len(B[0])):
+            # iterating by rows of B
+            for k in range(len(B)):
+                result[i][j] += A[i][k] * B[k][j]
+    return result    
+    
 def matrixAdd(matrix1, matrix2):
     print("matrix1 is", matrix1)
     """matrix addition as in linear algebra"""
