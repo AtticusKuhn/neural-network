@@ -6,3 +6,9 @@ I am doing this to try and learn how neural networks function.
 I am intenionally not looking at any other implementations or resources, and
 just looking at this video https://www.youtube.com/watch?v=aircAruvnKk by
 3blue1brown. I want to see how far I can get by myself.
+# How to run
+to run, do
+```bash
+python3 ./main.py
+```
+this will train the neural net, and then run it. 
