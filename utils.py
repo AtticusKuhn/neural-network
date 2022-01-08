@@ -51,6 +51,13 @@ def randomRange(length: int) -> List[float]:
     """returns a list of a length with random entries"""
     return list(map(lambda x: random.random(), list(range(length))))
 
+def randomMatrix(height: int, width: int) -> List[List[float]]:
+    """returns a matrix filled with random floats of the given width and height"""
+    tmp = []
+    for i in range(width):
+        tmp.append(randomRange(height))
+    return tmp
+
 def transpose(m):
     "transpose a matrix as defined in https://en.wikipedia.org/wiki/Transpose"
     return  [[m[j][i] for j in range(len(m))] for i in range(len(m[0]))]
