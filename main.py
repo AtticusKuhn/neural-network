@@ -2,6 +2,7 @@ from neuralNetwork import NeuralNetwork
 
 
 def main():
+    """the main function run when the program starts"""
     neuralNetork: NeuralNetwork = NeuralNetwork([3,2,3])
     testResult = neuralNetork.predict([[1],[2],[3]])
     print(f"testResult = {testResult}")

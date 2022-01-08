@@ -2,10 +2,13 @@ import math
 import random
 from typing import Any, List, Tuple
 
-def sigmoid(x):
+def sigmoid(x: float) -> float:
     """The sigmoid function as described in 10:26 of https://youtu.be/aircAruvnKk?t=626"""
-    print("x", x)
     return 1/(1+math.exp(-x))
+
+def sigmoidDerivative(x :float) -> float:
+    """The derivative of the sigmoid funtion"""
+    return sigmoid(x)*(1-sigmoid(x))
 
 def matrixMultiply(A: List[List[float]], B:List[List[float]]) -> List[List[float]]:
     """matrix multiplication as in linear algebra as in https://www.mathsisfun.com/algebra/matrix-multiplying.html"""
@@ -56,6 +59,12 @@ def randomMatrix(height: int, width: int) -> List[List[float]]:
     tmp = []
     for i in range(width):
         tmp.append(randomRange(height))
+    return tmp
+def zeroMatrix(height: int, width: int) -> List[List[float]]:
+    """returns a matrix filled with 0 of the given width and height"""
+    tmp = []
+    for i in range(width):
+        tmp.append([0]*height)
     return tmp
 
 def transpose(m):

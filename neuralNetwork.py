@@ -1,6 +1,5 @@
-from typing import List
-from utils import matrixAdd, matrixDimensions, matrixMultiply, randomMatrix, randomRange, sigmoid, transpose
-
+from typing import List, Tuple
+from utils import matrixAdd, matrixDimensions, matrixMultiply, randomMatrix, sigmoid, zeroMatrix
 
 class NeuralNetwork:
     """Represents a Neural Network as described in https://youtu.be/aircAruvnKk"""
@@ -9,7 +8,7 @@ class NeuralNetwork:
         "the number of layers in the neural network"
         self.shape=shape
         "the shape of the neural network"
-        self.biases:List[List[float]] = list(map(lambda x: randomMatrix(1, x), shape[1:]))
+        self.biases:List[List[List[float]]] = list(map(lambda x: randomMatrix(1, x), shape[1:]))
         "these are the biases"
         self.weights: List[List[List[float]]] = []
         "these are the weights"
@@ -27,7 +26,7 @@ class NeuralNetwork:
             vector = next
         return vector
     def cost(self, a: List[List[float]], b: List[List[float]]) -> float:
-        """the cost function as defined at 3:3s7 in https://youtu.be/IHZwWFHWa-w?t=217 It takes in 2 vectors and returns the cost between them"""
+        """the cost function as defined at 3:37 in https://youtu.be/IHZwWFHWa-w?t=217 It takes in 2 vectors and returns the cost between them"""
         cost = 0
         dimensionsA = matrixDimensions(a)
         dimensionsB = matrixDimensions(b)
@@ -40,9 +39,40 @@ class NeuralNetwork:
         for index,element  in enumerate(a):
             cost += (element[0] - b[index][0]) ** 2
         return cost 
-    def schoasticGradientDescent(self, trainingData, miniBatchSize = 10):
-        """schoastic gradient descent as defined at 9:34 of https://youtu.be/Ilg3gGewQ5U?t=574"""
-        raise Exception("schoastic gradient descent is not implemented")
-    def backpropagation(self, expected, actual):
-        """backpropagation, as descibed in the video https://youtu.be/Ilg3gGewQ5U"""
+    def schoasticGradientDescent(self, trainingData: List[Tuple[ List[List[float]], List[List[float]]]], miniBatchSize = 10):
+        """schoastic gradient descent as defined at 9:34 of https://youtu.be/Ilg3gGewQ5U?t=574 
+         basically break up the training data into mini batches and train on each mini batch
+         trainingData is a list of tuples where the first element of the tuple is the input and the second element of the tuple is the expected output
+        """
+        miniBatches: List[List[Tuple[ List[List[float]], List[List[float]]]]] = []
+        "the list of mini batches"
+        numberOfBatches: int = len(trainingData) / miniBatchSize
+        """the number of batches"""
+        for i in range(0, numberOfBatches, miniBatchSize): # loop over the batch size
+            miniBatches.append(trainingData[i:i+miniBatchSize])
+        for batch in miniBatches: # for each batch
+            self.trainOnSingleMiniBatch(batch) # train on each batch
+    def trainOnSingleMiniBatch(self, miniBatch: List[Tuple[ List[List[float]], List[List[float]]]]) -> None:
+        """given a miniBatch, train the network on the given miniBatch """
+        overallDeltaCWeights: List[List[List[float]]] = []
+        for bias in self.biases:
+            overallDeltaCWeights.append(zeroMatrix(len(bias), len(bias[0])))
+        overallDeltaCBiases: List[List[List[float]]] = []
+        for bias in self.biases:
+            overallDeltaCBiases.append(zeroMatrix(len(bias), len(bias[0])))
+        for miniBatchInput, miniBatchExpectedOutput in miniBatch:
+            deltaCWeights, deltaCBiases = self.backPropagation(miniBatchInput, miniBatchExpectedOutput)
+            for index, deltaCWeight in enumerate(deltaCWeights):
+               overallDeltaCWeights[index] = matrixAdd(overallDeltaCWeights[index] , deltaCWeight)
+            for index, deltaCBias in enumerate(deltaCBiases):
+               overallDeltaCBiases[index] = matrixAdd(overallDeltaCBiases[index],  deltaCBias)
+        self.biases = list(map(lambda x : matrixAdd(x[0], x[1]), zip(self.biases ,overallDeltaCBiases)))
+        self.weights = list(map(lambda x : matrixAdd(x[0], x[1]), zip(self.weights ,overallDeltaCWeights)))
+    def train(self, trainingData):
+        """train the neural network on the given training data"""
+        return self.schoasticGradientDescent(trainingData, 10)
+    def backPropagation(self, expectedResult:List[List[float]], actualResult: List[List[float]]) -> Tuple[List[List[List[float]]], List[List[List[float]]]] :
+        """backpropagation, as descibed in the video https://youtu.be/Ilg3gGewQ5U
+        it returns a tuple of delta C at 1:41 of https://youtu.be/Ilg3gGewQ5U?t=101
+        """
         pass
