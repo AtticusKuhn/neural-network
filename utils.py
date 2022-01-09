@@ -1,6 +1,6 @@
 import math
 import random
-from typing import Any, List, Tuple
+from typing import Any, Callable, List, Tuple
 
 def sigmoid(x: float) -> float:
     """The sigmoid function as described in 10:26 of https://youtu.be/aircAruvnKk?t=626"""
@@ -43,6 +43,30 @@ def matrixAdd(X:List[List[float]], Y:List[List[float]]) -> List[List[float]]:
         for j in range(len(X[0])):
             result[i][j] = X[i][j] + Y[i][j]
     return result
+def matrixSubtract(X:List[List[float]], Y:List[List[float]]) -> List[List[float]]:
+    """matrix subtraction as in linear algebra"""
+    print("X", X)
+    print("Y", Y)
+    if not matrixDimensions(X) == matrixDimensions(Y):
+        raise Exception(f"cannot subtract matricies with different dimensions (the first was {matrixDimensions(X)} and the second was {matrixDimensions(Y)})")
+    result = []
+    for i in range(len(X)):
+        result.append([0]*len(X[0]))
+    # iterate through rows
+    for i in range(len(X)):  
+    # iterate through columns
+        for j in range(len(X[0])):
+            result[i][j] = X[i][j] - Y[i][j]
+    return result
+def matrixMap(matrix: List[List[float]], func: Callable[[float], float]) -> List[List[float]]:
+    """map a function over a matrix"""
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            matrix[i][j]  = func(matrix[i][j])
+    return matrix
+def multiplyMatrixByScalar(matrix:List[List[float]], scalar: float) -> List[List[float]]:
+    """multiply a matrix by a scalar like in linear algebra"""
+    return matrixMap(matrix, lambda x:x*scalar)
 
 def matrixDimensions(matrix: List[List[Any]]) -> Tuple[int, int]:
     """get the length and width of a matrix, i.e. how many rows and columns"""
@@ -71,3 +95,19 @@ def transpose(m):
     "transpose a matrix as defined in https://en.wikipedia.org/wiki/Transpose"
     return  [[m[j][i] for j in range(len(m))] for i in range(len(m[0]))]
 
+def elementWiseMultiply(X: List[List[float]], Y: List[List[float]]) -> List[List[float]]:
+    """multiply 2 matricies by elements"""
+    if not matrixDimensions(X) == matrixDimensions(Y):
+        raise Exception(f"cannot multiply element-wise matricies with different dimensions (the first was {matrixDimensions(X)} and the second was {matrixDimensions(Y)})")
+    result = []
+    for i in range(len(X)):
+        result.append([0]*len(X[0]))
+    # iterate through rows
+    for i in range(len(X)):  
+    # iterate through columns
+        for j in range(len(X[0])):
+            result[i][j] = X[i][j] * Y[i][j]
+    return result
+def convertToZeroMatrix(matrix: List[List[float]]) -> List[List[float]]:
+    """given a matrix, return a matrix with the same dimensions as the original matrix, but all the entries are 0"""
+    return zeroMatrix(*matrixDimensions(matrix))
